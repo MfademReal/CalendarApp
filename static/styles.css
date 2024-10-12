@@ -1,0 +1,369 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #000; /* Default text color */
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+
+.days-header {
+    display: flex;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+}
+
+.day-header {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.hour-row {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.hour-label ,    .empty-day-header     {
+    width: 60px;
+    padding: 10px;
+    text-align: center;
+    border-right: 1px solid #ddd;
+}
+
+.day-cell {
+    flex: 1;
+    position: relative;
+    border-right: 1px solid #ddd;
+    height: 50px; /* Height of one hour block */
+}
+
+.event-title {
+    font-weight: bold;
+    color: #000;
+}
+
+.event-time {
+    font-size: 0.8em;
+    color: #000;
+
+}
+
+/* Dark mode styles */
+body.dark-mode {
+    background-color: rgb(10,9,17); /* Dark background */
+    color: #e8eaed; /* Light text color */
+}
+
+.dark-mode .day-header,
+.dark-mode .hour-label ,.dark-mode .empty-day-header{
+    background-color: rgb(17,15,32); /* Slightly lighter dark background */
+    color: #e8eaed; /* Light text color */
+}
+
+.dark-mode .calendar-container {
+    background-color: rgb(10,9,17); /* Dark background for calendar */
+    border-color: #3c4043; /* Lighter border for dark mode */
+}
+
+.dark-mode .hour-row {
+    border-bottom: 1px solid #3c4043; /* Darker border for rows */
+}
+
+.event {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    padding: 5px;
+    background-color: lightblue;
+    color: #000;
+    border-radius: 5px;
+    overflow: hidden;
+    box-sizing: border-box; /* Ensures padding and border are included in width/height */
+}
+
+.dark-mode .day-cell {
+    background-color: transparent; /* Transparent to avoid blocking events */
+    border-right: 1px solid #3c4043; /* Darker border for day cells */
+}
+
+.event.dark-mode {
+    color: #e8eaed; /* Light text color for events */
+}
+
+/* Toggle button styles */
+.toggle-container {
+    display: flex;
+    margin: 20px;
+}
+
+.toggle {
+    width: 60px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.toggle input {
+    display: none;
+}
+
+.toggle .slider {
+    width: 26px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.toggle .icon-sun,
+.toggle .icon-moon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #f39c12;
+    pointer-events: none; /* Prevent icon from being clicked */
+}
+
+.toggle .icon-sun {
+    right: 6px;
+    color: #f39c12;
+}
+
+.toggle .icon-moon {
+    left: 6px;
+    color: #3498db;
+}
+
+.toggle.active .slider {
+    left: calc(100% - 28px);
+}
+
+.toggle.active .icon-sun {
+    color: #fff;
+}
+
+.toggle.active .icon-moon {
+    color: #333;
+}
+
+
+
+/* General Toggle Switch Styles */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.toggle {
+    width: 60px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 20px; /* Space between toggles */
+}
+
+.toggle input {
+    display: none;
+}
+
+.toggle .slider {
+    width: 26px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.toggle .icon-sun,
+.toggle .icon-moon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.toggle .icon-sun {
+    right: 6px;
+    color: #f39c12;
+}
+
+.toggle .icon-moon {
+    left: 6px;
+    color: #3498db;
+}
+
+.toggle.active .slider {
+    left: calc(100% - 28px);
+}
+
+/* Custom Radio Toggle Styles */
+.language-toggle-container {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.language-toggle {
+    width: 100px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.language-toggle input {
+    display: none;
+}
+
+.language-toggle .slider {
+    width: 50px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 30px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.language-toggle .label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+    pointer-events: none;
+}
+
+.language-toggle .label-english {
+    left: 0;
+}
+
+.language-toggle .label-persian {
+    right: 0;
+}
+
+.language-toggle.active .slider {
+    left: calc(100% - 52px);
+}
+
+
+/* Add these styles to your existing CSS file */
+
+/* Hamburger menu icon */
+.menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #f4f4f4;
+    transition: right 0.3s ease;
+    z-index: 1000;
+}
+
+.sidebar.open {
+    right: 0;
+}
+
+.sidebar-content {
+    padding: 20px;
+}
+
+/* Dark mode sidebar */
+.dark-mode .sidebar {
+    background-color: #222;
+    color: #fff;
+}
+
+/* Minimalistic language toggle */
+.language-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.language-toggle {
+    background-color: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+.language-toggle.active {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.dark-mode .language-toggle {
+    color: #fff;
+}
+
+.dark-mode .language-toggle.active {
+    color: #4da6ff;
+}
+
+/* Page transition animation */
+.page-transition {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Existing styles for the dark mode toggle... */
+
+/* Update toggle container styles */
+.toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

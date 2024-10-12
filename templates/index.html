@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Calendar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Existing styles... */
+
+        /* Loading transition */
+        .loading-transition {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .loading-transition.loaded {
+            opacity: 1;
+        }
+
+  
+
+        /* Hamburger menu icon */
+        .menu-icon {
+            cursor: pointer;
+            font-size: 24px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #f4f4f4;
+            transition: right 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        /* Dark mode sidebar */
+        .dark-mode .sidebar {
+            background-color: #222;
+            color: #fff;
+        }
+
+        /* Minimalistic language toggle */
+        .language-toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .language-toggle {
+            background-color: transparent;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle.active {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .dark-mode .language-toggle {
+            color: #fff;
+        }
+
+        .dark-mode .language-toggle.active {
+            color: #4da6ff;
+        }
+
+        /* Page transition animation */
+        .page-transition {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Update toggle container styles */
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .current-time-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: red;
+            z-index: 999; /* Ensure it's on top */
+        }
+        .day {
+            position: relative; /* Make parent relative for absolute positioning */
+            height: 200px; /* Adjust as needed */
+            border: 1px solid #ccc; /* Optional: Add a border for clarity */
+        }
+    </style>
+
+    <script>
+        // Function to refresh the page every 10 minutes (600000 milliseconds)
+        setTimeout(function() {
+            location.reload();
+        }, 600000); // 60000 milliseconds = 10 minutes
+    </script>
+
+</head>
+<body class="{% if dark_mode == 'on' %}dark-mode{% endif %} loading-transition">
+    <div class="header {% if dark_mode == 'on' %}dark-mode{% endif %}">
+        <h1>Weekly Calendar</h1>
+        <div class="menu-icon" id="menuIcon">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <!-- Language Toggle -->
+            <div class="language-toggle-container">
+                <label class="language-toggle {% if language == 'english' %}active{% endif %}">
+                    <input type="radio" name="language" value="english" {% if language == 'english' %} checked {% endif %}>
+                    <span class="label-english">EN</span>
+                </label>
+                <label class="language-toggle {% if language == 'persian' %}active{% endif %}">
+                    <input type="radio" name="language" value="persian" {% if language == 'persian' %} checked {% endif %}>
+                    <span class="label-persian">FA</span>
+                </label>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <div class="toggle-container">
+                <label id="dark-mode-label" class="toggle {% if dark_mode == 'on' %}active{% endif %}">
+                    <input type="checkbox" id="dark-mode-toggle" {% if dark_mode == 'on' %} checked {% endif %} hidden>
+                    <i class="fas fa-moon icon-moon"></i>
+                    <div class="slider"></div>
+                    <i class="fas fa-sun icon-sun"></i>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="calendar-container">
+        <div class="days-header">
+            <div class="empty-day-header"></div>
+            {% for day in days %}
+                <div class="day-header {% if dark_mode == 'on' %}dark-mode{% endif %}">
+                    <div>{{ day.day_name }}</div>
+                    <div>{{ day.display_date }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="calendar-body">
+            {% for i in range(24) %}
+            <div class="hour-row">
+                <div class="hour-label {% if dark_mode == 'on' %}dark-mode{% endif %}">{{ "%02d:00" % i }}</div>
+                {% for day in days %}
+                    <div class="day-cell {% if dark_mode == 'on' %}dark-mode{% endif %}">
+                        {% for event in events_by_day[day.day_key] %}
+                            {% if event.start.hour == i %}
+                                <div class="event {% if dark_mode == 'on' %}dark-mode{% endif %}" 
+                                     style="background-color: {{ event.color }}; 
+                                            top: {{ (event.start.minute / 60.0) * 100 }}%; 
+                                            height: calc({{ (event.end - event.start).total_seconds() / 3600 }} * 50px);">
+                                    <div class="event-title">{{ event.summary }}</div>
+                                    <div class="event-time">{{ event.start.strftime('%H:%M') }} - {{ event.end.strftime('%H:%M') }}</div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Add loaded class to body after a short delay
+            setTimeout(function() {
+                $('body').addClass('loaded');
+            }, 100);
+
+            // Handle language toggle
+            $('input[name="language"]').change(function() {
+                const selectedLanguage = $(this).val();
+                $('body').removeClass('loaded');
+                setTimeout(() => {
+                    window.location.href = `/set_language/${selectedLanguage}?dark_mode={{ dark_mode }}`;
+                }, 300);
+            });
+
+            // Handle dark mode toggle
+            $('#dark-mode-toggle').change(function() {
+                const mode = $(this).is(':checked') ? 'on' : 'off';
+                $('body').removeClass('loaded');
+                setTimeout(() => {
+                    window.location.href = `/set_dark_mode/${mode}?lang={{ language }}`;
+                }, 300);
+            });
+
+            // Handle sidebar toggle
+            $('#menuIcon').click(function() {
+                $('#sidebar').toggleClass('open');
+            });
+
+            // Close sidebar when clicking outside
+            $(document).click(function(event) {
+                if (!$(event.target).closest('#sidebar, #menuIcon').length) {
+                    $('#sidebar').removeClass('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
