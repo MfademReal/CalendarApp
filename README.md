@@ -9,7 +9,6 @@ This is a Flask-based web application that displays a weekly calendar with event
 - `templates/index.html`: The main HTML template for the calendar.
 - `credentials.json`: Credentials for API access (ignored in `.gitignore`).
 - `token.json`: OAuth token for authentication (ignored in `.gitignore`).
-- `a.sh`: Script for project-specific operations.
 
 ## Setup
 
